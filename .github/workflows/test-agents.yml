@@ -15,7 +15,7 @@ jobs:
   test-openagent:
     name: Test OpenAgent
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     
     steps:
       - name: Checkout code
@@ -28,6 +28,17 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'evals/framework/package-lock.json'
       
+      - name: Install OpenCode CLI
+        run: |
+          bash install.sh
+          echo "$HOME/.opencode/bin" >> $GITHUB_PATH
+      
+      - name: Verify OpenCode installation
+        run: |
+          export PATH="$HOME/.opencode/bin:$PATH"
+          which opencode
+          opencode --version
+      
       - name: Install dependencies
         working-directory: evals/framework
         run: npm install
@@ -37,7 +48,9 @@ jobs:
         run: npm run build
       
       - name: Run OpenAgent smoke test
-        run: npm run test:ci:openagent
+        run: |
+          export PATH="$HOME/.opencode/bin:$PATH"
+          npm run test:ci:openagent
         env:
           CI: true
       
@@ -52,7 +65,7 @@ jobs:
   test-opencoder:
     name: Test OpenCoder
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     
     steps:
       - name: Checkout code
@@ -65,6 +78,17 @@ jobs:
           cache: 'npm'
           cache-dependency-path: 'evals/framework/package-lock.json'
       
+      - name: Install OpenCode CLI
+        run: |
+          bash install.sh
+          echo "$HOME/.opencode/bin" >> $GITHUB_PATH
+      
+      - name: Verify OpenCode installation
+        run: |
+          export PATH="$HOME/.opencode/bin:$PATH"
+          which opencode
+          opencode --version
+      
       - name: Install dependencies
         working-directory: evals/framework
         run: npm install
@@ -74,7 +98,9 @@ jobs:
         run: npm run build
       
       - name: Run OpenCoder smoke test
-        run: npm run test:ci:opencoder
+        run: |
+          export PATH="$HOME/.opencode/bin:$PATH"
+          npm run test:ci:opencoder
         env:
           CI: true
       
